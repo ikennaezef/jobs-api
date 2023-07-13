@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 
-const userSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
 	name: {
 		type: String,
 		required: [true, "Please provide a name!"],
@@ -21,10 +21,10 @@ const userSchema = new mongoose.Schema({
 	},
 });
 
-userSchema.methods.createJWT = function () {
+UserSchema.methods.createJWT = function () {
 	return jwt.sign({ id: this._id, name: this.name }, process.env.JWT_SECRET, {
 		expiresIn: process.env.JWT_EXPIRY,
 	});
 };
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model("User", UserSchema);
