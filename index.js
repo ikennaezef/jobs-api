@@ -30,14 +30,15 @@ app.use(xss());
 
 // Swagger
 const SwaggerUI = require("swagger-ui-express");
-const YAML = require("yamljs");
-const swaggerDocs = YAML.load("./swagger.yaml");
+// const YAML = require("yamljs");
+// const swaggerDocs = YAML.load("./swagger.yaml");
+const swaggerJSON = require("./swagger.json");
 
 // Homepage
 app.get("/", (req, res) => {
-	res.send('<h1>Jobs API</h1><a href="/docs">Documentation<a/>');
+	res.send('<h1>Jobs API</h1><a href="/api-docs">Documentation<a/>');
 });
-app.use("/docs", SwaggerUI.serve, SwaggerUI.setup(swaggerDocs));
+app.use("/api-docs", SwaggerUI.serve, SwaggerUI.setup(swaggerJSON));
 
 // Routes
 app.use("/api/v1/jobs/", validateToken, jobsRoutes);
