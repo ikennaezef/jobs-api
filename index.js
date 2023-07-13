@@ -24,7 +24,21 @@ const SwaggerUI = require("swagger-ui-express");
 // const swaggerDocs = YAML.load("./swagger.yaml");
 // const file = fs.readFileSync("./swagger.yaml", "utf8");
 // const swaggerDocument = YAML.parse(file);
+
+const options = {
+	customJs: [
+		"https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-bundle.min.js",
+		"https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.min.js",
+	],
+	customCssUrl: [
+		"https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.min.css",
+		"https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.min.css",
+		"https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.css",
+	],
+};
+
 const swaggerJSON = require("./swagger.json");
+app.use("/api-docs", SwaggerUI.serve, SwaggerUI.setup(swaggerJSON, options));
 
 const limiter = rateLimit({
 	windowMs: 15 * 60 * 1000,
@@ -35,7 +49,6 @@ app.set("trust proxy", 1);
 app.use(limiter);
 app.use(express.json());
 
-app.use("/api-docs", SwaggerUI.serve, SwaggerUI.setup(swaggerJSON));
 app.use(helmet());
 app.use(cors());
 app.use(xss());
