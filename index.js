@@ -26,7 +26,7 @@ app.use(express.json());
 app.use(helmet());
 app.use(cors());
 app.use(xss());
-const port = 5000;
+const port = process.env.PORT || 3001;
 
 // Homepage
 app.get("/", (req, res) => {
