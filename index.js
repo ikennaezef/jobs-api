@@ -18,6 +18,14 @@ const port = process.env.PORT || 3001;
 
 const app = express();
 
+// Swagger
+const SwaggerUI = require("swagger-ui-express");
+const YAML = require("yamljs");
+const swaggerDocs = YAML.load("./swagger.yaml");
+// const file = fs.readFileSync("./swagger.yaml", "utf8");
+// const swaggerDocument = YAML.parse(file);
+const swaggerJSON = require("./swagger.json");
+
 const limiter = rateLimit({
 	max: 100,
 });
@@ -25,23 +33,17 @@ const limiter = rateLimit({
 app.set("trust proxy", 1);
 app.use(limiter);
 app.use(express.json());
+
+app.use("/api-docs", SwaggerUI.serve, SwaggerUI.setup(swaggerDocs));
 app.use(helmet());
 app.use(cors());
 app.use(xss());
-
-// Swagger
-const SwaggerUI = require("swagger-ui-express");
-const YAML = require("yamljs");
-const swaggerDocs = YAML.load("./swagger.yaml");
-const file = fs.readFileSync("./swagger.yaml", "utf8");
-const swaggerDocument = YAML.parse(file);
-const swaggerJSON = require("./swagger.json");
 
 // Homepage
 app.get("/", (req, res) => {
 	res.send('<h1>Jobs API</h1><a href="/api-docs">Documentation<a/>');
 });
-app.use("/api-docs", SwaggerUI.serve, SwaggerUI.setup(swaggerDocument));
+// app.use("/api-docs", SwaggerUI.serve, SwaggerUI.setup(swaggerDocument));
 
 // Routes
 app.use("/api/v1/jobs/", validateToken, jobsRoutes);
